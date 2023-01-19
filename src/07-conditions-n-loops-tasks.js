@@ -83,8 +83,15 @@ function getSumBetweenNumbers(n1, n2) {
  *   10,1,1   =>  false
  *   10,10,10 =>  true
  */
-function isTriangle(/* a, b, c */) {
-  throw new Error('Not implemented');
+function isTriangle(a, b, c) {
+  if (a <= 0 || b <= 0 || c <= 0) {
+    return false;
+  }
+  if (a + b > c && a + c > b && c + b > a) {
+    return true;
+  }
+
+  return false;
 }
 
 
@@ -120,8 +127,32 @@ function isTriangle(/* a, b, c */) {
  *   { top:20, left:20, width: 20, height: 20 }    =>  false
  *
  */
-function doRectanglesOverlap(/* rect1, rect2 */) {
-  throw new Error('Not implemented');
+function doRectanglesOverlap(rect1, rect2) {
+  const rectangle1 = {
+    a: [rect1.top, rect1.left],
+    b: [rect1.left + rect1.width, rect1.top],
+    c: [rect1.top + rect1.height, rect1.left + rect1.width],
+    d: [rect1.left, rect1.top + rect1.height],
+  };
+
+  const rectangle2 = {
+    w: [rect2.top, rect2.left],
+    x: [rect2.left + rect2.width, rect2.top],
+    y: [rect2.top + rect2.height, rect2.left + rect2.width],
+    z: [rect2.left, rect2.top + rect2.height],
+  };
+
+  let horizontal = false;
+  if (rectangle1.b[0] > rectangle2.w[0] && rectangle2.x[0] > rectangle1.a[0]) {
+    horizontal = true;
+  }
+
+  let vertical = false;
+  if (rectangle1.d[1] > rectangle2.w[1] && rectangle2.z[1] > rectangle1.a[0]) {
+    vertical = true;
+  }
+
+  return horizontal && vertical;
 }
 
 
@@ -151,8 +182,17 @@ function doRectanglesOverlap(/* rect1, rect2 */) {
  *   { center: { x:0, y:0 }, radius:10 },  { x:10, y:10 }   => false
  *
  */
-function isInsideCircle(/* circle, point */) {
-  throw new Error('Not implemented');
+function isInsideCircle(circle, point) {
+  const circleX = circle.center.x;
+  const circleY = circle.center.y;
+  const distPoints = (circleX - point.x) * (circleX - point.x)
+  + (circleY - point.y) * (circleY - point.y);
+  let { radius } = circle;
+  radius *= radius;
+  if (distPoints < radius) {
+    return true;
+  }
+  return false;
 }
 
 
@@ -170,6 +210,7 @@ function isInsideCircle(/* circle, point */) {
 function findFirstSingleChar(/* str */) {
   throw new Error('Not implemented');
 }
+// this is the problem function
 
 
 /**
@@ -194,8 +235,10 @@ function findFirstSingleChar(/* str */) {
  *   5, 3, true, true   => '[3, 5]'
  *
  */
-function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
-  throw new Error('Not implemented');
+function getIntervalString(a, b, isStartIncluded, isEndIncluded) {
+  const leftBrace = isStartIncluded ? '[' : '(';
+  const rigthBrace = isEndIncluded ? ']' : ')';
+  return `${leftBrace}${a < b ? a : b}, ${a < b ? b : a}${rigthBrace}`;
 }
 
 
@@ -211,8 +254,8 @@ function getIntervalString(/* a, b, isStartIncluded, isEndIncluded */) {
  * 'rotator' => 'rotator'
  * 'noon' => 'noon'
  */
-function reverseString(/* str */) {
-  throw new Error('Not implemented');
+function reverseString(str) {
+  return str.split('').reverse().join('');
 }
 
 
@@ -228,8 +271,8 @@ function reverseString(/* str */) {
  *   87354 => 45378
  *   34143 => 34143
  */
-function reverseInteger(/* num */) {
-  throw new Error('Not implemented');
+function reverseInteger(num) {
+  return Number(String(num).split('').reverse().join(''));
 }
 
 
@@ -253,8 +296,16 @@ function reverseInteger(/* num */) {
  *   5436468789016589 => false
  *   4916123456789012 => false
  */
-function isCreditCardNumber(/* ccn */) {
-  throw new Error('Not implemented');
+function isCreditCardNumber(ccn) {
+  const digits = ccn.toString().split('').map((n) => parseInt(n, 10));
+  for (let i = digits.length - 2; i >= 0; i -= 2) {
+    digits[i] *= 2;
+    if (digits[i] > 9) {
+      digits[i] -= 9;
+    }
+  }
+  const sum = digits.reduce((a, b) => a + b);
+  return sum % 10 === 0;
 }
 
 /**
