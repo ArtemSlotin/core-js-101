@@ -1,6 +1,6 @@
 /* *******************************************************************************************
  *                                                                                           *
- * Please read the following tutorial before implementing tasks:                              *
+ * Plese read the following tutorial before implementing tasks:                              *
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Numbers_and_dates#Date_object
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date     *
  *                                                                                           *
@@ -19,8 +19,8 @@
  *    'Tue, 26 Jan 2016 13:48:02 GMT' => Date()
  *    'Sun, 17 May 1998 03:00:00 GMT+01' => Date()
  */
-function parseDataFromRfc2822(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromRfc2822(value) {
+  return new Date(value);
 }
 
 /**
@@ -34,8 +34,8 @@ function parseDataFromRfc2822(/* value */) {
  *    '2016-01-19T16:07:37+00:00'    => Date()
  *    '2016-01-19T08:07:37Z' => Date()
  */
-function parseDataFromIso8601(/* value */) {
-  throw new Error('Not implemented');
+function parseDataFromIso8601(value) {
+  return new Date(value);
 }
 
 
@@ -53,13 +53,14 @@ function parseDataFromIso8601(/* value */) {
  *    Date(2012,1,1)    => true
  *    Date(2015,1,1)    => false
  */
-function isLeapYear(/* date */) {
-  throw new Error('Not implemented');
+function isLeapYear(date) {
+  const year = date.getFullYear();
+  return ((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0);
 }
 
 
 /**
- * Returns the string representation of the timespan between two dates.
+ * Returns the string represention of the timespan between two dates.
  * The format of output string is "HH:mm:ss.sss"
  *
  * @param {date} startDate
@@ -73,8 +74,34 @@ function isLeapYear(/* date */) {
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,10,0,0,250)     => "00:00:00.250"
  *    Date(2000,1,1,10,0,0),  Date(2000,1,1,15,20,10,453)   => "05:20:10.453"
  */
-function timeSpanToString(/* startDate, endDate */) {
-  throw new Error('Not implemented');
+function timeSpanToString(startDate, endDate) {
+  let diff = endDate - startDate;
+  let ms = diff % 1000;
+  diff -= ms;
+  diff /= 1000;
+  if (ms < 10) {
+    ms = `00${ms}`;
+  } else if (ms < 100) {
+    ms = `0${ms}`;
+  }
+
+  let hours = Math.floor(diff / 3600);
+  if (hours < 10) {
+    hours = `0${hours}`;
+  }
+  diff -= hours * 3600;
+
+  let minutes = Math.floor(diff / 60);
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  diff -= minutes * 60;
+
+  let seconds = diff;
+  if (seconds < 10) {
+    seconds = `0${seconds}`;
+  }
+  return `${hours}:${minutes}:${seconds}.${ms}`;
 }
 
 
@@ -94,8 +121,23 @@ function timeSpanToString(/* startDate, endDate */) {
  *    Date.UTC(2016,3,5,18, 0) => Math.PI
  *    Date.UTC(2016,3,5,21, 0) => Math.PI/2
  */
-function angleBetweenClockHands(/* date */) {
-  throw new Error('Not implemented');
+function angleBetweenClockHands(date) {
+  let hours = date.getUTCHours();
+  const minutes = date.getMinutes();
+
+  if (hours > 12) {
+    hours -= 12;
+  }
+
+  const minutesDeg = minutes * 6;
+  let hoursDeg = hours * 5 * 6;
+  hoursDeg += 30 / (60 / minutes);
+  let angle = Math.abs(minutesDeg - hoursDeg);
+
+  if (angle > 180) {
+    angle -= 180;
+  }
+  return Math.PI * (angle / 180);
 }
 
 
